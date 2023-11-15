@@ -7,9 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class ProductEditDialog extends JDialog {
 
@@ -34,71 +31,29 @@ public class ProductEditDialog extends JDialog {
     }
 
     private void initializeUI() {
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout());
 
-        nameField = new JTextField();
-        descriptionArea = new JTextArea();
-        purchasePriceField = new JTextField();
-        salePriceField = new JTextField();
+        nameField = new JTextField(20);
+        descriptionArea = new JTextArea(5, 20);
+        purchasePriceField = new JTextField(20);
+        salePriceField = new JTextField(20);
         saveButton = new JButton("Save");
         uploadImageButton = new JButton("Upload Image");
         imageLabel = new JLabel();
 
-        // Set up layout using GroupLayout or another layout manager of your choice
-        JPanel panel = new JPanel();
-        GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
+        add(new JLabel("Name"));
+        add(nameField);
+        add(new JLabel("Description"));
+        add(descriptionArea);
+        add(new JLabel("Purchase Price"));
+        add(purchasePriceField);
+        add(new JLabel("Sale Price"));
+        add(salePriceField);
+        add(new JLabel("Image"));
+        add(imageLabel);
+        add(saveButton);
+        add(uploadImageButton);
 
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-
-        GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-        hGroup.addGroup(layout.createParallelGroup()
-                .addComponent(new JLabel("Name"))
-                .addComponent(new JLabel("Description"))
-                .addComponent(new JLabel("Purchase Price"))
-                .addComponent(new JLabel("Sale Price"))
-                .addComponent(new JLabel("Image"))
-                .addComponent(saveButton)
-                .addComponent(uploadImageButton)
-        );
-        hGroup.addGroup(layout.createParallelGroup()
-                .addComponent(nameField)
-                .addComponent(descriptionArea)
-                .addComponent(purchasePriceField)
-                .addComponent(salePriceField)
-                .addComponent(imageLabel)
-        );
-        layout.setHorizontalGroup(hGroup);
-
-        GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-        vGroup.addGroup(layout.createParallelGroup()
-                .addComponent(new JLabel("Name"))
-                .addComponent(nameField)
-        );
-        vGroup.addGroup(layout.createParallelGroup()
-                .addComponent(new JLabel("Description"))
-                .addComponent(descriptionArea)
-        );
-        vGroup.addGroup(layout.createParallelGroup()
-                .addComponent(new JLabel("Purchase Price"))
-                .addComponent(purchasePriceField)
-        );
-        vGroup.addGroup(layout.createParallelGroup()
-                .addComponent(new JLabel("Sale Price"))
-                .addComponent(salePriceField)
-        );
-        vGroup.addGroup(layout.createParallelGroup()
-                .addComponent(new JLabel("Image"))
-                .addComponent(imageLabel)
-        );
-        vGroup.addGroup(layout.createParallelGroup()
-                .addComponent(saveButton)
-                .addComponent(uploadImageButton)
-        );
-        layout.setVerticalGroup(vGroup);
-
-        // Attach action listeners
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -113,11 +68,6 @@ public class ProductEditDialog extends JDialog {
             }
         });
 
-        // Add components to the layout
-        add(panel, BorderLayout.CENTER);
-        add(saveButton, BorderLayout.SOUTH);
-
-        // Set other dialog properties like size, default close operation, etc.
         setSize(400, 300);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(getOwner());
@@ -130,8 +80,6 @@ public class ProductEditDialog extends JDialog {
         salePriceField.setText(String.valueOf(product.getSalePrice()));
         // Set image from product.getImage() to the imageLabel
         // This depends on how you store and retrieve images
-        // For simplicity, assuming product.getImage() returns a byte array
-        displayImage(product.getImage());
     }
 
     private void saveChanges() {
@@ -147,31 +95,7 @@ public class ProductEditDialog extends JDialog {
     }
 
     private void uploadImage() {
-        JFileChooser fileChooser = new JFileChooser();
-        int result = fileChooser.showOpenDialog(this);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            try {
-                byte[] imageData = Files.readAllBytes(selectedFile.toPath());
-                currentProduct.setImage(imageData);
-                displayImage(imageData);
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error reading image file.");
-            }
-        }
-    }
-
-    private void displayImage(byte[] imageData) {
-            if (imageData != null && imageData.length > 0) {
-                ImageIcon imageIcon = new ImageIcon(imageData);
-                Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                imageIcon = new ImageIcon(scaledImage);
-                imageLabel.setIcon(imageIcon);
-            } else {
-                imageLabel.setIcon(null); // Clear the icon if there is no image
-            }
-
+        // Implement image upload logic, and update the imageLabel
+        // This might involve using a file chooser and handling image files
     }
 }
